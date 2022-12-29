@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import Wrapper from "@/components/ContentWrapper.vue";
 import EventsGrid from "@/components/EventsGrid.vue";
 </script>
 
 <template>
   <div class="flex h-full flex-col">
-    <Wrapper additional-classes="h-2/4">
-      <template #title>Events</template>
+    <div class="flex w-full flex-col">
+      <p class="text-left text-2xl font-bold">Events</p>
       <Suspense>
         <template #default>
-          <div class="grid grid-flow-col grid-rows-3">
+          <div class="flex flex-row flex-wrap">
             <EventsGrid />
           </div>
         </template>
@@ -17,6 +16,6 @@ import EventsGrid from "@/components/EventsGrid.vue";
           <h1>Loading....</h1>
         </template>
       </Suspense>
-    </Wrapper>
+    </div>
   </div>
 </template>

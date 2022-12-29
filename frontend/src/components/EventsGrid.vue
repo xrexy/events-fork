@@ -6,7 +6,7 @@ const { fetchAll, createThumbnailURI } = useEvent();
 const { isAuthenticated, login } = useAuthStore();
 
 if (!isAuthenticated) {
-  await login({ identity: "xrexy_test_2", password: "testpass" });
+  await login({ identity: "xrexy_test", password: "testpass" });
 }
 
 const events = await fetchAll().then((records) =>
@@ -20,15 +20,14 @@ console.log(events);
 </script>
 
 <template>
-  <div class="h-fit w-fit">
-    <div
-      v-for="event in events"
-      :key="event.title"
-      class="border bg-slate-900 p-2 dark:border-slate-800"
-    >
-      <div class="w-fit text-2xl font-bold">{{ event.title }}</div>
-      <div class="w-fit text-gray-500">{{ event.description }}</div>
-      <img class="h-40 w-40" :src="event.thumbnail" />
+  <div
+    v-for="event in events"
+    :key="event.title"
+    class="w-fit border bg-slate-900 p-2 dark:border-slate-800"
+  >
+    <div>
+      <img :src="event.thumbnail" class="aspect-square h-auto w-32" />
     </div>
+    <div class="w-fit text-gray-500">{{ event.description }}</div>
   </div>
 </template>
