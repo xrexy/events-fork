@@ -29,7 +29,7 @@ console.log(events);
       <img
         :src="event.thumbnail"
         class="aspect-square h-auto w-32"
-        :alt="`img_${event.id}`"
+        :alt="`imgage for ${event.title}`"
       />
     </div>
     <div class="w-fit text-gray-500">{{ event.description }}</div>
