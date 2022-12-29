@@ -26,7 +26,11 @@ console.log(events);
     class="w-fit border bg-slate-900 p-2 dark:border-slate-800"
   >
     <div>
-      <img :src="event.thumbnail" class="aspect-square h-auto w-32" />
+      <img
+        :src="event.thumbnail"
+        class="aspect-square h-auto w-32"
+        :alt="`img_${event.id}`"
+      />
     </div>
     <div class="w-fit text-gray-500">{{ event.description }}</div>
   </div>
