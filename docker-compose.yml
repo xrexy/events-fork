@@ -1,0 +1,20 @@
+version: '3'
+
+services:
+  backend:
+    build: ./backend
+    image: xrexy/events-fork-backend
+    restart: unless-stopped
+    volumes:
+      - ./docker-data/pocketbase:/app/pb_data
+    ports:
+      - 8090:8090
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        API_HOST: https://api.craftex.dev
+    image: xrexy/events-fork-frontend
+    restart: unless-stopped
+    ports:
+      - 3000:80

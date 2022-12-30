@@ -40,9 +40,11 @@ export const useRecord = <T extends BaseRecord, CreateDto extends object>(
 
   const update = async (dto: Partial<CreateDto>) => {
     if (!record.value) return;
+    if (!record.value.id) return;
+
     record.value = await client
       .collection(collection)
-      .update<T>(record.value?.id, dto);
+      .update<T>(record.value.id, dto);
   };
 
   const remove = async () => {
