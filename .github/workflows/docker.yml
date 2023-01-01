@@ -29,7 +29,7 @@ jobs:
       - name: Authentication MonkaW
         run: |
           echo ${{ env.REGISTRY }}
-          echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "github_workflow" --password-stdin
+          docker login -u "github_workflow" -p ${{ secrets.DOCKER_PASSWORD }}
 
   update_ssh_linode:
     name: Linode Update
