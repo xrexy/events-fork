@@ -12,17 +12,7 @@ env:
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set env
-        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
-      - name: Test
-        run: |
-          echo $RELEASE_VERSION
-          echo ${{ env.RELEASE_VERSION }}
-  build-and-push-image:
+  prep-images:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -40,7 +30,7 @@ jobs:
       - name: Compose 💅
         run: |
           ls
-          docker-compose up
+          docker-compose up -d
         
       - name: Tag Images 🥸
         env:
@@ -58,7 +48,7 @@ jobs:
 
   update_ssh_linode:
     name: Linode Update
-    needs: "build-and-push-image"
+    needs: "prep-images"
     runs-on: ubuntu-latest
     steps:
       - name: executing remote ssh commands using password
