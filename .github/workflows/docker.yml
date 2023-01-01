@@ -28,16 +28,15 @@ jobs:
         run: echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
         
       - name: Compose 💅
-        run: |
-          ls
-          docker-compose up -d
+        run: docker-compose up -d
         
       - name: Tag Images 🥸
         env:
           BASE: events-fork
         run: |
-          docker image tag $BASE/backend $REGISTRY/$BASE/backend:latest
-          docker image tag $BASE/frontend $REGISTRY/$BASE/frontend:latest
+          docker image list
+          docker image tag $BASE/backend $REGISTRY/$BASE/backend
+          docker image tag $BASE/frontend $REGISTRY/$BASE/frontend
           
       - name: Push 😰
         env:
