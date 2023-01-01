@@ -32,6 +32,10 @@ jobs:
           REGISTRY_PASSWORD: ${{ env.REGISTRY_PASSWORD }}
         run: |
           echo ${{ env.REGISTRY }}
+          echo ${{ env.REGISTRY_PASSWORD }}
+          echo $REGISTRY_PASSWORD
+          echo $secrets.DOCKER_PASSWORD
+          echo ${{ secrets.DOCKER_PASSWORD }}
           echo $REGISTRY_PASSWORD | docker login -u "github_workflow" --password-stdin
 
   update_ssh_linode:
