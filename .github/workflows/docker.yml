@@ -22,9 +22,9 @@ jobs:
       matrix:
         include:
           - dockerfile: ./backend/Dockerfile
-            image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:backend
+            image: ${{ env.REGISTRY }}/$env.IMAGE_NAME:backend
           - dockerfile: ./frontend/Dockerfile
-            image: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:frontend
+            image: ${{ env.REGISTRY }}/$env.IMAGE_NAME:frontend
     permissions:
       contents: read
       packages: write
@@ -36,7 +36,7 @@ jobs:
       - name: Log in to the Container registry
         uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          registry: ${{ env.REGISTRY }}
+          registry: $env.REGISTRY
           username: ${{ secrets.REGISTRY_USERNAME }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
