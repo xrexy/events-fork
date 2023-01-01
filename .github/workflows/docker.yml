@@ -17,6 +17,16 @@ env:
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set env
+        run: echo "RELEASE_VERSION=${GITHUB_REF#refs/*/}" >> $GITHUB_ENV
+      - name: Test
+        run: |
+          echo $RELEASE_VERSION
+          echo ${{ env.RELEASE_VERSION }}
   build-and-push-image:
     runs-on: ubuntu-latest
     permissions:
@@ -28,12 +38,28 @@ jobs:
         with:
           path: "frontend"
           
-      - name: Authentication MonkaW
+      - name: Authenticate MonkaW
         env:
           PASSWORD: ${{ env.REGISTRY_PASSWORD }}
           USERNAME: ${{ env.REGISTRY_USERNAME }}
+        run: echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
+        
+      - name: Compose 💅
+        run: docker-compose up
+        
+      - name: Tag Images 🥸
+        env:
+          BASE: events-fork
         run: |
-          echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
+          docker image tag $BASE/backend $REGISTRY/$BASE/backend:latest
+          docker image tag $BASE/frontend $REGISTRY/$BASE/frontend:latest
+          
+      - name: Push 😰
+        env:
+          BASE: events-fork
+        run: |
+          docker push $REGISTRY/$BASE/backend:latest
+          docker push $REGISTRY/$BASE/frontend:latest
 
   update_ssh_linode:
     name: Linode Update
