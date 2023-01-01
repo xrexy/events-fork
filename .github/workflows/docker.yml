@@ -10,6 +10,10 @@ env:
   REGISTRY: registry.craftex.dev
   REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+  SSH_POT: ${{ secrets.SSH_PORT }}
 
 jobs:
   prep-images:
@@ -22,10 +26,7 @@ jobs:
         uses: actions/checkout@v2
           
       - name: Authenticate MonkaW
-        env:
-          PASSWORD: ${{ env.REGISTRY_PASSWORD }}
-          USERNAME: ${{ env.REGISTRY_USERNAME }}
-        run: echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
+        run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
         
       - name: Compose 💅
         run: docker-compose up -d
@@ -45,16 +46,19 @@ jobs:
           docker push $REGISTRY/$BASE/backend:latest
           docker push $REGISTRY/$BASE/frontend:latest
 
-  update_ssh_linode:
+  update_images:
     name: Linode Update
     needs: "prep-images"
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands using password
+      - name: Executing remote update script
         uses: appleboy/ssh-action@master
         with:
-          host: ${{ secrets.HOST }}
-          username: ${{ secrets.USERNAME }}
-          password: ${{ secrets.PASSWORD }}
-          port: ${{ secrets.PORT }}
-          script: bash update.sh
+          host: ${{ env.SSH_HOST }}
+          username: ${{ env.SSH_USER }}
+          password: ${{ env.SSH_PASSWORD }}
+          port: ${{ secrets.SSH_PORT }}
+          script: |
+            ls
+            echo "hey" > test.txt
+            bash docker_update.sh
