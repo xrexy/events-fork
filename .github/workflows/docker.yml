@@ -28,6 +28,8 @@ jobs:
           path: "frontend"
           
       - name: Authentication MonkaW
+        env:
+          REGISTRY_PASSWORD: ${{ env.REGISTRY_PASSWORD }}
         run: |
           echo ${{ env.REGISTRY }}
           echo $REGISTRY_PASSWORD | docker login -u "github_workflow" --password-stdin
