@@ -30,8 +30,6 @@ jobs:
     steps:
       - name: Checkout >w>
         uses: actions/checkout@v2
-        with:
-          path: "frontend"
           
       - name: Authenticate MonkaW
         env:
