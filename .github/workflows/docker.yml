@@ -33,9 +33,7 @@ jobs:
           PASSWORD: ${{ env.REGISTRY_PASSWORD }}
           USERNAME: ${{ env.REGISTRY_USERNAME }}
         run: |
-          echo $PASSWORD
-          echo $USERNAME
-          echo $PASSWORD | docker login -u $USERNAME --password-stdin
+          echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
 
   update_ssh_linode:
     name: Linode Update
