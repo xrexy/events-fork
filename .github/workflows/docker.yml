@@ -1,9 +1,4 @@
-# This workflow uses actions that are not certified by GitHub.
-# They are provided by a third-party and are governed by
-# separate terms of service, privacy policy, and support
-# documentation.
-
-name: Publish Docker image
+name: Publish Release
 
 on:
 #  release:
@@ -45,7 +40,9 @@ jobs:
         run: echo $PASSWORD | docker login $REGISTRY -u $USERNAME --password-stdin
         
       - name: Compose 💅
-        run: docker-compose up
+        run: |
+          ls
+          docker-compose up
         
       - name: Tag Images 🥸
         env:
