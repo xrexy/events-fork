@@ -13,6 +13,7 @@ on:
 
 env:
   REGISTRY: registry.craftex.dev
+  REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
 
 jobs:
@@ -29,9 +30,12 @@ jobs:
           
       - name: Authentication MonkaW
         env:
-          REGISTRY_PASSWORD: ${{ env.REGISTRY_PASSWORD }}
+          PASSWORD: ${{ env.REGISTRY_PASSWORD }}
+          USERNAME: ${{ env.REGISTRY_USERNAME }}
         run: |
-          echo $REGISTRY_PASSWORD | docker login -u "github_workflow" --password-stdin
+          echo $PASSWORD
+          echo $USERNAME
+          echo $PASSWORD | docker login -u $USERNAME --password-stdin
 
   update_ssh_linode:
     name: Linode Update
