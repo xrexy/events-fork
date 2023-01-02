@@ -55,4 +55,5 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo $REPOSITORY > repo.txt
-            bash ~/prod/update -r $REGISTRY -p events-fork -t latest
+            echo $REGISTRY > reg.txt
+            bash ~/prod/update -r "$REGISTRY" -p events-fork -t latest
