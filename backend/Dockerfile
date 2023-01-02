@@ -13,7 +13,7 @@ RUN go build -v ./main.go
 
 FROM alpine
 
-WORKDIR /app80
+WORKDIR /app
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /app/main ./
 
