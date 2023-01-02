@@ -54,5 +54,4 @@ jobs:
           port: ${{ secrets.SSH_PORT }}
           script: |
             echo ${{ github.repository }} > repo.txt
-            echo ${{ REGISTRY }} > reg.txt
             bash ~/prod/update -r ${{ REGISTRY }} -p events-fork -t latest
