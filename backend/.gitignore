@@ -1,0 +1,4 @@
+*.exe
+*.exe~*.out
+go.work
+pb_data

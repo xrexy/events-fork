@@ -3,9 +3,11 @@ import type { NavigationItem } from "@/router";
 import { RouterLink } from "vue-router";
 import PersonIcon from "./icons/MaterialSymbolsPerson.vue";
 import { useDark, useToggle } from "@vueuse/core";
+import { useAuth } from "@/stores/auth";
 
 const isDark = useDark();
 const toggleTheme = useToggle(isDark);
+const { isAuthenticated, user } = useAuth();
 
 const navigationItems: NavigationItem[] = [
   { label: "Home", destination: "/" },
@@ -66,6 +68,12 @@ const onPersonClick = () => {
             svg: 'p-1',
           }"
         />
+        <p
+          class="select-none pr-2 font-semibold text-gray-400 group-hover:text-brand-500 dark:text-white dark:group-hover:text-brand-400"
+          v-if="isAuthenticated && user"
+        >
+          {{ user.username }}
+        </p>
       </div>
     </div>
   </nav>
