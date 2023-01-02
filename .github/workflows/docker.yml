@@ -3,6 +3,8 @@ name: Publish Release
 on:
   release:
     types: [published]
+  push:
+    branches: [docker]
 
 env:
   REGISTRY: ${{ secrets.REGISTRY }}
