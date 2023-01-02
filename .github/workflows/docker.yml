@@ -59,5 +59,6 @@ jobs:
           password: ${{ env.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo $github.repository > repo.txt
-            bash ~/prod/update -r $REGISTRY -p events-fork -t latest
+            echo ${{ github.repository }} > repo.txt
+            echo ${{ REGISTRY }} > reg.txt
+            bash ~/prod/update -r ${{ REGISTRY }} -p events-fork -t latest
