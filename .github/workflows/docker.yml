@@ -44,15 +44,15 @@ jobs:
   update_images:
     name: Linode Update
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Executing remote update script
         uses: appleboy/ssh-action@master
         env:
-          REGISTRY: ${{ env.REGISTRY }}
           REPOSITORY: ${{ github.repository }}
           REPO: ${{ github.event.repository.name }}
         with:
-          shell: bash
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
           password: ${{ env.SSH_PASSWORD }}
