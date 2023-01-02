@@ -1,24 +1,17 @@
 name: Publish Release
 
 on:
-#  release:
-#    types: [published]
-  push:
-    branches: [ "docker" ]
+  release:
+    types: [published]
 
 env:
-  REGISTRY: registry.craftex.dev
+  REGISTRY: ${{ secrets.REGISTRY }}
+  REPOSITORY: ${{ github.event.repository.name }}
   REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
   REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-  SSH_HOST: ${{ secrets.SSH_HOST }}
-  SSH_USER: ${{ secrets.SSH_USER }}
-  SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
-  SSH_POT: ${{ secrets.SSH_PORT }}
-  BASE: events-fork
-  REPOSITORY: ${{ github.repository }}
 
 jobs:
-  prep-images:
+  release:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -26,33 +19,41 @@ jobs:
     steps:
       - name: Checkout >w>
         uses: actions/checkout@v2
-          
+
+      - name: Get Latest Release
+        id: releases
+        uses: pozetroninc/github-action-get-latest-release@v0.5.0
+        with:
+          repository: xrexy/events-fork
+          excludes: "draft"
+
       - name: Authenticate MonkaW
         run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
-        
+
       - name: Build 💅
+        env:
+          PREFIX: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
+          VERSION: ${{ steps.releases.outputs.release }}
         run: |
           echo ${{ github.repository }}
-          docker build ./frontend/ -t $REGISTRY/$BASE/frontend:latest
-          docker build ./backend/ -t $REGISTRY/$BASE/backend:latest
-          
+          docker build ./frontend/ -t $PREFIX/frontend:$VERSION -t $PREFIX/frontend:latest
+          docker build ./backend/ -t $PREFIX/backend:$VERSION -t $PREFIX/backend:latest
+
       - name: Push 😰
         run: |
-          docker push $REGISTRY/$BASE/backend:latest
-          docker push $REGISTRY/$BASE/frontend:latest
+          docker push $REGISTRY/$REPOSITORY/backend --all-tags
+          docker push $REGISTRY/$REPOSITORY/frontend --all-tags
 
-  update_images:
-    name: Linode Update
-    needs: "prep-images"
-    runs-on: ubuntu-latest
-    steps:
-      - name: Executing remote update script
+      - name: Execute update script
         uses: appleboy/ssh-action@master
+        env:
+          SSH_HOST: ${{ secrets.SSH_HOST }}
+          SSH_USER: ${{ secrets.SSH_USER }}
+          SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
+          SSH_POT: ${{ secrets.SSH_PORT }}
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
           password: ${{ env.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          script: |
-            echo $REPOSITORY > repo.txt
-            bash ~/prod/update -r $REGISTRY -p events-fork -t latest
+          script: bash ~/prod/update -u ${{ env.REGISTRY_USERNAME }} -p ${{ env.REGISTRY_PASSWORD }} -r ${{ env.REGISTRY }} -f ${{ env.REPOSITORY }}
