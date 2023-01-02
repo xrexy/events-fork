@@ -19,6 +19,7 @@ env:
 
 jobs:
   prep-images:
+    needs: [update_images]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -43,7 +44,6 @@ jobs:
 
   update_images:
     name: Linode Update
-    needs: "prep-images"
     runs-on: ubuntu-latest
     steps:
       - name: Executing remote update script
