@@ -14,6 +14,7 @@ env:
   SSH_USER: ${{ secrets.SSH_USER }}
   SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
   SSH_POT: ${{ secrets.SSH_PORT }}
+  BASE: events-fork
 
 jobs:
   prep-images:
@@ -28,20 +29,13 @@ jobs:
       - name: Authenticate MonkaW
         run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
         
-      - name: Compose 💅
-        run: docker-compose up -d
-        
-      - name: Tag Images 🥸
-        env:
-          BASE: events-fork
+      - name: Build 💅
         run: |
-          docker image list
-          docker image tag $BASE/backend $REGISTRY/$BASE/backend
-          docker image tag $BASE/frontend $REGISTRY/$BASE/frontend
+          echo ${{ github.repository }}
+          docker build ./frontend/ -t $REGISTRY/$BASE/frontend:latest
+          docker build ./backend/ -t $REGISTRY/$BASE/backend:latest
           
       - name: Push 😰
-        env:
-          BASE: events-fork
         run: |
           docker push $REGISTRY/$BASE/backend:latest
           docker push $REGISTRY/$BASE/frontend:latest
