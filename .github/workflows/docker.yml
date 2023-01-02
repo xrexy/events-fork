@@ -15,7 +15,6 @@ env:
   SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }}
   SSH_POT: ${{ secrets.SSH_PORT }}
   BASE: events-fork
-  REPOSITORY: ${{ github.repository }}
 
 jobs:
   prep-images:
@@ -48,6 +47,9 @@ jobs:
     steps:
       - name: Executing remote update script
         uses: appleboy/ssh-action@master
+        env:
+          REGISTRY: ${{ env.REGISTRY }}
+          REPOSITORY: ${{ github.repository }}
         with:
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
