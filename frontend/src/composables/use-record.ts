@@ -1,6 +1,6 @@
 import type { BaseRecord } from "@/pocketbase";
 import client from "@/pocketbase";
-import { useAuthStore } from "@/stores/auth";
+import { useAuth } from "@/stores/auth";
 import { ref } from "vue";
 
 export const useRecord = <T extends BaseRecord, CreateDto extends object>(
@@ -8,7 +8,7 @@ export const useRecord = <T extends BaseRecord, CreateDto extends object>(
 ) => {
   const record = ref<T>();
   const isFetching = ref(false);
-  const authStore = useAuthStore();
+  const authStore = useAuth();
 
   const fetchAll = () => {
     isFetching.value = true;

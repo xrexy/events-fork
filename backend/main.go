@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
-
 	"events-fork/internals/server"
+	_ "events-fork/migrations"
+	"log"
 )
 
 func main() {

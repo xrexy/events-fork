@@ -37,7 +37,7 @@ export interface UserSettingsDto {
   locale: string;
 }
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuth = defineStore("auth", () => {
   const isAuthenticated = computed(() => !!user.value);
   const user = ref(client.authStore.model as User | null);
 
@@ -48,6 +48,8 @@ export const useAuthStore = defineStore("auth", () => {
   if (user.value) client.collection("users").authRefresh();
 
   const login = async ({ identity, password }: LoginPayload) => {
+    console.log(identity, password);
+
     await client.collection("users").authWithPassword(identity, password);
   };
 
