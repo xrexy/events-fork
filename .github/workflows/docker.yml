@@ -50,12 +50,15 @@ jobs:
         env:
           REGISTRY: ${{ env.REGISTRY }}
           REPOSITORY: ${{ github.repository }}
+          REPO: ${{ github.event.repository.name }}
         with:
+          shell: bash
           host: ${{ env.SSH_HOST }}
           username: ${{ env.SSH_USER }}
           password: ${{ env.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo $REPOSITORY > repo.txt
-            echo $REGISTRY > reg.txt
-            bash ~/prod/update -r "$REGISTRY" -p events-fork -t latest
+            echo $REPOSITORY > repository
+            echo $REPO > repo
+            echo $REGISTRY > registry
+            bash ~/prod/update -r $REGISTRY -p events-fork -t latest
