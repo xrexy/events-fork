@@ -1,3 +1,4 @@
+# BUILD STAGE
 FROM golang:1.19.4-alpine as builder
 
 # Define build env
@@ -11,9 +12,10 @@ RUN go mod download
 COPY . .
 RUN go build -v ./main.go
 
+# RUN STAGE
 FROM alpine
 
-WORKDIR /app80
+WORKDIR /app
 RUN apk add --no-cache ca-certificates
 COPY --from=builder /app/main ./
 
