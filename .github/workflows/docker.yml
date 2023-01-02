@@ -19,22 +19,29 @@ jobs:
       contents: read
       packages: write
     steps:
-      #- name: Checkout >w>
-      #  uses: actions/checkout@v2
+      - name: Checkout >w>
+        uses: actions/checkout@v2
           
-      #- name: Authenticate MonkaW
-      #  run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
+      - name: Authenticate MonkaW
+        run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
         
-      #- name: Build 💅
-      #  run: |
-      #    echo ${{ github.repository }}
-      #    docker build ./frontend/ -t $REGISTRY/$BASE/frontend:latest
-      #    docker build ./backend/ -t $REGISTRY/$BASE/backend:latest
+      - name: Build 💅
+        run: |
+          echo ${{ github.repository }}
+          docker build ./frontend/ -t $REGISTRY/$BASE/frontend:latest
+          docker build ./backend/ -t $REGISTRY/$BASE/backend:latest
           
-      #- name: Push 😰
-      #  run: |
-      #    docker push $REGISTRY/$BASE/backend:latest
-      #    docker push $REGISTRY/$BASE/frontend:latest
+      - name: Push 😰
+        run: |
+          docker push $REGISTRY/$BASE/backend:latest
+          docker push $REGISTRY/$BASE/frontend:latest
+
+      - name: Get Latest Release
+        id: releases
+        uses: pozetroninc/github-action-get-latest-release@v0.5.0
+        with:
+          repository: xrexy/events-fork
+          excludes: "prerelease, draft"
           
       - name: Execute update script
         uses: appleboy/ssh-action@master
@@ -49,4 +56,6 @@ jobs:
           username: ${{ env.SSH_USER }}
           password: ${{ env.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
-          script: bash ~/prod/update -user ${{ env.REGISTRY_USERNAME }} -p ${{ env.REGISTRY_PASSWORD }} -r ${{ env.REGISTRY }} -prefix ${{ env.PREFIX }} -tag latest 
+          script: |
+            bash ~/prod/update -u ${{ env.REGISTRY_USERNAME }} -p ${{ env.REGISTRY_PASSWORD }} -r ${{ env.REGISTRY }} -f ${{ env.PREFIX }} -t latest
+            echo ${{ steps.releases.outputs.release }} > release
