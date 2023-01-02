@@ -6,7 +6,7 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-# PRODUCTION STAGE
+# RUN STAGE
 FROM nginx:1.23.3-alpine as prod-stage
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 80
