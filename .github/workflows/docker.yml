@@ -59,6 +59,5 @@ jobs:
           password: ${{ env.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            ls
-            echo "hey" > test.txt
-            bash docker_update.sh
+            echo $github.repository > repo.txt
+            bash ~/prod/update -r $REGISTRY -p events-fork -t latest
