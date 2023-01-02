@@ -1,13 +1,7 @@
 <script setup lang="ts">
 import { useEvent } from "@/composables/use-events";
-import { useAuthStore } from "@/stores/auth";
 
 const { fetchAll, createThumbnailURI } = useEvent();
-const { isAuthenticated, login } = useAuthStore();
-
-if (!isAuthenticated) {
-  await login({ identity: "xrexy_test", password: "testpass" });
-}
 
 const events = await fetchAll().then((records) =>
   records.map((record) => ({
@@ -15,8 +9,6 @@ const events = await fetchAll().then((records) =>
     thumbnail: createThumbnailURI(record.id, record.thumbnail),
   }))
 );
-
-console.log(events);
 </script>
 
 <template>

@@ -37,7 +37,7 @@ export interface UserSettingsDto {
   locale: string;
 }
 
-export const useAuthStore = defineStore("auth", () => {
+export const useAuth = defineStore("auth", () => {
   const isAuthenticated = computed(() => !!user.value);
   const user = ref(client.authStore.model as User | null);
 
