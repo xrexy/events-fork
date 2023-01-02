@@ -48,8 +48,6 @@ export const useAuth = defineStore("auth", () => {
   if (user.value) client.collection("users").authRefresh();
 
   const login = async ({ identity, password }: LoginPayload) => {
-    console.log(identity, password);
-
     await client.collection("users").authWithPassword(identity, password);
   };
 
