@@ -17,25 +17,25 @@ jobs:
       contents: read
       packages: write
     steps:
-      - name: Checkout >w>
-        uses: actions/checkout@v2
+      #- name: Checkout >w>
+      #  uses: actions/checkout@v2
           
-      - name: Authenticate MonkaW
-        env:
-          REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
-          REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
-        run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
+      #- name: Authenticate MonkaW
+      #  env:
+      #    REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      #    REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
+      #  run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
         
-      - name: Build 💅
-        run: |
-          echo ${{ github.repository }}
-          docker build ./frontend/ -t $REGISTRY/$BASE/frontend:latest
-          docker build ./backend/ -t $REGISTRY/$BASE/backend:latest
+      #- name: Build 💅
+      #  run: |
+      #    echo ${{ github.repository }}
+      #    docker build ./frontend/ -t $REGISTRY/$BASE/frontend:latest
+      #    docker build ./backend/ -t $REGISTRY/$BASE/backend:latest
           
-      - name: Push 😰
-        run: |
-          docker push $REGISTRY/$BASE/backend:latest
-          docker push $REGISTRY/$BASE/frontend:latest
+      #- name: Push 😰
+      #  run: |
+      #    docker push $REGISTRY/$BASE/backend:latest
+      #    docker push $REGISTRY/$BASE/frontend:latest
           
       - name: Execute update script
         uses: appleboy/ssh-action@master
@@ -52,7 +52,7 @@ jobs:
           password: ${{ env.SSH_PASSWORD }}
           port: ${{ secrets.SSH_PORT }}
           script: |
-            echo $REPOSITORY > repository
-            echo $REPO > repo
-            echo $REGISTRY > registry
-            bash ~/prod/update -r $REGISTRY -p events-fork -t latest
+            echo ${{ env.REPOSITORY }} > repository
+            echo ${{ env.REPO }} > repo
+            echo ${{ env.REGISTRY }} > registry
+            bash ~/prod/update -r ${{ env.REGISTRY }} -p events-fork -t latest
