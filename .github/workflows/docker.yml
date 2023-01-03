@@ -31,14 +31,21 @@ jobs:
 
       - name: Authenticate MonkaW
         run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
-
+        
+      - name: Create .env file
+        uses: SpicyPizza/create-envfile@v1.3.0
+        env:
+          API_ROUTE: ${{ secrets.API_ROUTE }}
+        with:
+          VITE_API_HOST: $API_ROUTE
+          
       - name: Build 💅
         env:
           PREFIX: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
           VERSION: ${{ steps.releases.outputs.release }}
-          API_ROUTE: ${{ secrets.API_ROUTE }}
+          
         run: |
-          docker build ./frontend/ -t $PREFIX/frontend:$VERSION -t $PREFIX/frontend:latest --build-arg API_HOST=$API_ROUTE
+          docker build ./frontend/ -t $PREFIX/frontend:$VERSION -t $PREFIX/frontend:latest
           docker build ./backend/ -t $PREFIX/backend:$VERSION -t $PREFIX/backend:latest
 
       - name: Push 😰
