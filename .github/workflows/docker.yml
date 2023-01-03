@@ -33,12 +33,14 @@ jobs:
         run: echo $REGISTRY_PASSWORD | docker login $REGISTRY -u $REGISTRY_USERNAME --password-stdin
 
       - name: Build 💅
+        shell: bash
         env:
           PREFIX: ${{ env.REGISTRY }}/${{ env.REPOSITORY }}
           VERSION: ${{ steps.releases.outputs.release }}
-          API_HOST: ${{ secrets.API_ROUTE }}
+          API_ROUTE: ${{ secrets.API_ROUTE }}
         run: |
-          docker build ./frontend/ -t $PREFIX/frontend:$VERSION -t $PREFIX/frontend:latest --build-arg=API_HOST=$API_HOST
+          echo "VITE_API_HOST=$API_ROUTE" > ./frontend/.env
+          docker build ./frontend/ -t $PREFIX/frontend:$VERSION -t $PREFIX/frontend:latest
           docker build ./backend/ -t $PREFIX/backend:$VERSION -t $PREFIX/backend:latest
 
       - name: Push 😰
