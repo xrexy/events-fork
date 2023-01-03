@@ -6,9 +6,6 @@ RUN yarn install
 COPY . .
 RUN yarn build
 
-ARG API_HOST=http://localhost:8090
-ENV VITE_API_HOST $API_HOST
-
 # RUN STAGE
 FROM nginx:1.23.3-alpine as prod-stage
 COPY --from=build /app/dist /usr/share/nginx/html
