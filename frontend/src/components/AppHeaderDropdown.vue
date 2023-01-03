@@ -1,14 +1,19 @@
 <script lang="ts" setup>
 import { useAuth } from "@/stores/auth";
+import { ChevronRightIcon, UserIcon } from "@heroicons/vue/24/solid";
+import { onClickOutside, useDark } from "@vueuse/core";
 import { useToggle } from "@vueuse/shared";
-import { UserIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
-import { useDark } from "@vueuse/core";
+import { ref } from "vue";
 
 const [active, toggleActive] = useToggle(false);
-const { isAuthenticated, user } = useAuth();
+const { isAuthenticated, user, logout } = useAuth();
 
 const isDark = useDark();
 const toggleTheme = useToggle(isDark);
+
+const root = ref<HTMLDivElement>();
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+onClickOutside(root, (_) => toggleActive(false));
 
 const sections: {
   label: string;
@@ -19,18 +24,29 @@ const sections: {
   }[];
 }[] = [
   {
-    label: "Account",
+    label: `Account${" " + (user?.username || "")}`,
     items: [
-      {
-        label: "Your Profile",
-      },
+      isAuthenticated
+        ? {
+            label: "Your Profile",
+          }
+        : {
+            label: "Sign in",
+            redirect: "/login",
+          },
       {
         label: "Toggle Theme",
         action: () => toggleTheme(),
       },
-      {
-        label: "Sign out",
-      },
+      isAuthenticated
+        ? {
+            label: "Sign Out",
+            action: () => logout(),
+          }
+        : {
+            label: "Close Menu",
+            // action: () => toggleActive(false), // This is the default action
+          },
     ],
   },
   {
@@ -71,6 +87,7 @@ const sections: {
   </div>
 
   <div
+    ref="root"
     v-show="active"
     class="fixed right-0 top-[63px] m-0 flex h-[calc(100vh-63px)] w-screen flex-col justify-evenly border-t border-gray-300 bg-gray-200 px-32 pt-4 pb-32 text-center dark:border-slate-800 dark:bg-slate-900"
   >
@@ -84,7 +101,7 @@ const sections: {
       >
         {{ label }}
       </p>
-      <div>
+      <div @click="toggleActive(false)">
         <div
           v-for="{ label, action, redirect } in items"
           :key="label"
@@ -96,6 +113,7 @@ const sections: {
             <ChevronRightIcon class="h-5 w-5" />
             <p v-if="!redirect">{{ label }}</p>
             <a
+              target="_blank"
               v-if="
                 redirect && typeof redirect === 'object' && redirect.external
               "
@@ -121,26 +139,3 @@ const sections: {
     </div>
   </div>
 </template>
-
-<!--
-
-      <div
-        class="group flex w-auto cursor-pointer items-center justify-center rounded-full border-2 border-gray-400 hover:border-brand-600 hover:bg-gray-700/10 dark:border-white dark:hover:border-brand-400"
-        @click="onPersonClick() "
-      >
-        <PersonIcon
-          :scale="{ width: '2em', height: '2em' }"
-          :classes="{
-            path: 'fill-gray-400 dark:fill-white group-hover:fill-brand-500 dark:group-hover:fill-brand-400',
-            svg: 'p-1',
-          }"
-        />
-        <p
-          class="select-none pr-2 font-semibold text-gray-400 group-hover:text-brand-500 dark:text-white dark:group-hover:text-brand-400"
-          v-if="isAuthenticated && user"
-        >
-          {{ user.username }}
-        </p>
-      </div>
-
--->
