@@ -29,6 +29,8 @@ export const useRecord = <T extends BaseRecord, CreateDto extends object>(
     } finally {
       isFetching.value = false;
     }
+
+    return !!record.value;
   };
 
   const create = async (dto: CreateDto) => {
