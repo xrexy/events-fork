@@ -89,26 +89,26 @@ const sections: {
   <div
     ref="root"
     v-show="active"
-    class="fixed right-0 top-[63px] m-0 flex h-[calc(100vh-63px)] w-screen flex-col justify-evenly border-t border-gray-300 bg-gray-200 px-32 pt-4 pb-32 text-center dark:border-slate-800 dark:bg-slate-900"
+    class="fixed right-0 top-[63px] flex h-[calc(100vh-63px)] w-screen flex-col justify-evenly border-t border-gray-300 bg-gray-200 px-32 pt-4 pb-32 text-center dark:border-slate-800 dark:bg-slate-900 sm:absolute sm:h-fit sm:w-fit sm:gap-4 sm:border sm:px-4 sm:py-4"
   >
     <div
-      class="flex flex-col items-center gap-12"
+      class="flex h-full flex-col items-center gap-12 sm:w-full sm:gap-2"
       v-for="{ items, label } in sections"
       :key="label"
     >
       <p
-        class="text-4xl font-black uppercase tracking-[0.15em] text-gray-500 dark:text-white"
+        class="w-full text-4xl font-black uppercase tracking-[0.15em] text-gray-600 dark:text-white sm:text-xl"
       >
         {{ label }}
       </p>
-      <div @click="toggleActive(false)">
+      <div @click="toggleActive(false)" class="w-full">
         <div
           v-for="{ label, action, redirect } in items"
           :key="label"
           @click="() => !!action && action()"
         >
           <div
-            class="flex w-full flex-row items-center justify-start gap-1 rounded-sm py-1 px-2 text-lg tracking-wider text-gray-400 transition-all hover:cursor-pointer hover:bg-slate-300 hover:text-gray-500 dark:text-gray-600 hover:dark:bg-slate-800 hover:dark:text-gray-500"
+            class="flex w-full flex-row items-center justify-start gap-1 rounded-sm py-1 px-2 text-lg tracking-wider text-gray-400 transition-all hover:cursor-pointer hover:bg-slate-300 hover:text-gray-500 dark:text-gray-600 hover:dark:bg-slate-800 hover:dark:text-gray-500 sm:text-sm"
           >
             <ChevronRightIcon class="h-5 w-5" />
             <p v-if="!redirect">{{ label }}</p>
