@@ -45,7 +45,11 @@ export const useAuth = defineStore("auth", () => {
     user.value = model as typeof user.value;
   });
 
-  if (user.value) client.collection("users").authRefresh();
+  if (user.value)
+    client
+      .collection("users")
+      .authRefresh()
+      .catch(() => logout()); // logout if refresh fails
 
   const login = async ({ identity, password }: LoginPayload) => {
     await client.collection("users").authWithPassword(identity, password);

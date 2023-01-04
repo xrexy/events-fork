@@ -1,24 +1,16 @@
 <script setup lang="ts">
+import Dropdown from "@/components/AppHeaderDropdown.vue";
 import type { NavigationItem } from "@/router";
+import { useDark } from "@vueuse/core";
 import { RouterLink } from "vue-router";
-import PersonIcon from "./icons/MaterialSymbolsPerson.vue";
-import { useDark, useToggle } from "@vueuse/core";
-import { useAuth } from "@/stores/auth";
 
 const isDark = useDark();
-const toggleTheme = useToggle(isDark);
-const { isAuthenticated, user } = useAuth();
 
 const navigationItems: NavigationItem[] = [
   { label: "Home", destination: "/" },
   { label: "Create", destination: "/create" },
   { label: "Calendar", destination: "/calendar" },
 ];
-``;
-const onPersonClick = () => {
-  console.log("Person clicked");
-  toggleTheme(); // temporary
-};
 </script>
 
 <template>
@@ -40,7 +32,7 @@ const onPersonClick = () => {
       />
     </router-link>
 
-    <div class="flex items-center justify-evenly">
+    <div class="flex h-full items-center justify-evenly">
       <ul
         class="mr-[14px] flex gap-4 text-base font-semibold text-gray-500 dark:text-white"
         v-for="{ destination, label } in navigationItems"
@@ -57,24 +49,7 @@ const onPersonClick = () => {
           </router-link>
         </li>
       </ul>
-      <div
-        class="group flex w-auto cursor-pointer items-center justify-center rounded-full border-2 border-gray-400 hover:border-brand-600 hover:bg-gray-700/10 dark:border-white dark:hover:border-brand-400"
-        @click="onPersonClick()"
-      >
-        <PersonIcon
-          :scale="{ width: '2em', height: '2em' }"
-          :classes="{
-            path: 'fill-gray-400 dark:fill-white group-hover:fill-brand-500 dark:group-hover:fill-brand-400',
-            svg: 'p-1',
-          }"
-        />
-        <p
-          class="select-none pr-2 font-semibold text-gray-400 group-hover:text-brand-500 dark:text-white dark:group-hover:text-brand-400"
-          v-if="isAuthenticated && user"
-        >
-          {{ user.username }}
-        </p>
-      </div>
+      <Dropdown />
     </div>
   </nav>
 </template>

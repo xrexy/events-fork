@@ -1,3 +1,3 @@
 <template>
-  <h1>sup</h1>
+  <h1>Calendar</h1>
 </template>
