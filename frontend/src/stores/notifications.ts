@@ -8,14 +8,11 @@ interface Notification extends BaseRecord {
   title: string;
   body: string;
   type: "info" | "success" | "warning" | "error";
-}
-
-export interface CreateNotificationDto {
-  title: string;
-  body: string;
+  timeout?: number;
 }
 
 const LOCAL_STORAGE_KEY = "notifications__read";
+const MAXIMUM_NOTIFICATIONS = 2;
 const actionsList = ["update", "create", "delete"] as const;
 
 type Action = typeof actionsList[number];
@@ -23,13 +20,14 @@ type Action = typeof actionsList[number];
 export const useNotifications = defineStore("notifications", () => {
   const notifications = ref([] as Notification[]);
   let readNotifications: string[] = [];
+  const timeouts: Record<string, number> = {};
 
   client
     .collection("notifications")
     .getFullList<Notification>()
     .then((list) => {
       const local = fetchLocal();
-      notifications.value = list.filter((n) => !local.includes(n.id));
+      list.filter((n) => !local.includes(n.id)).forEach(internalAdd);
     });
 
   const handleUpdate: (data: RecordSubscription<Notification>) => void = ({
@@ -43,7 +41,7 @@ export const useNotifications = defineStore("notifications", () => {
         update(notification);
         break;
       case "create":
-        add(notification);
+        internalAdd(notification);
         break;
       case "delete":
         setAsRead(notification.id);
@@ -62,12 +60,16 @@ export const useNotifications = defineStore("notifications", () => {
     (await unsubscribeFn)();
   };
 
-  const setAsRead = (id: string) => {
-    readNotifications.push(id);
-    window.localStorage.setItem(
-      LOCAL_STORAGE_KEY,
-      JSON.stringify(readNotifications)
-    );
+  const setAsRead = (id: string, optins?: { addToStorage: boolean }) => {
+    if (timeouts[id]) window.clearTimeout(timeouts[id]);
+
+    if (optins?.addToStorage) {
+      readNotifications.push(id);
+      window.localStorage.setItem(
+        LOCAL_STORAGE_KEY,
+        JSON.stringify(readNotifications)
+      );
+    }
     notifications.value = notifications.value.filter((n) => n.id !== id);
   };
 
@@ -82,8 +84,30 @@ export const useNotifications = defineStore("notifications", () => {
     }
   };
 
-  const add = (notification: Notification) => {
+  const internalAdd = (notification: Notification) => {
     notifications.value.push(notification);
+    timeouts[notification.id] = window.setTimeout(() => {
+      console.info(`Notification ${notification.id} timed out`);
+      setAsRead(notification.id);
+    }, notification.timeout || 5000);
+  };
+
+  const add = (notification: Notification, options?: { replace: boolean }) => {
+    if (notifications.value.length >= MAXIMUM_NOTIFICATIONS) {
+      console.log(
+        `Maximum notifications reached ${
+          options?.replace ? "(replacing first)" : "(ignoring)"
+        }`
+      );
+      if (options?.replace) {
+        const first = notifications.value.shift();
+        if (first) setAsRead(first.id, { addToStorage: false });
+
+        internalAdd(notification);
+      }
+    } else {
+      internalAdd(notification);
+    }
   };
 
   const update = (notification: Notification) => {
