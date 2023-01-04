@@ -63,19 +63,14 @@ export const useNotifications = defineStore("notifications", () => {
     (await unsubscribeFn)();
   };
 
-  const setAsRead = (
-    id: string,
-    optins?: { addToStorage: boolean } = { addToStorage: true }
-  ) => {
+  const setAsRead = (id: string) => {
     if (timeouts[id]) window.clearTimeout(timeouts[id]);
 
-    if (optins?.addToStorage) {
-      readNotifications.push(id);
-      window.localStorage.setItem(
-        LOCAL_STORAGE_KEY,
-        JSON.stringify(readNotifications)
-      );
-    }
+    readNotifications.push(id);
+    window.localStorage.setItem(
+      LOCAL_STORAGE_KEY,
+      JSON.stringify(readNotifications)
+    );
     notifications.value = notifications.value.filter((n) => n.id !== id);
   };
 
@@ -107,7 +102,7 @@ export const useNotifications = defineStore("notifications", () => {
       );
       if (options?.replace) {
         const first = notifications.value.shift();
-        if (first) setAsRead(first.id, { addToStorage: false });
+        if (first) setAsRead(first.id);
 
         internalAdd(notification);
       }
