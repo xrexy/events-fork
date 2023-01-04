@@ -4,18 +4,21 @@ import { defineStore } from "pinia";
 import type { RecordSubscription } from "pocketbase";
 import { ref } from "vue";
 
-interface Notification extends BaseRecord {
+export interface Notification extends BaseRecord {
   title: string;
   body: string;
-  type: "info" | "success" | "warning" | "error";
+  type: Type;
   timeout?: number;
 }
 
 const LOCAL_STORAGE_KEY = "notifications__read";
 const MAXIMUM_NOTIFICATIONS = 2;
+const NOTIFICATION_TIMEOUT = 10000000;
 const actionsList = ["update", "create", "delete"] as const;
+const types = ["info", "success", "warning", "error"] as const;
 
-type Action = typeof actionsList[number];
+export type Action = typeof actionsList[number];
+export type Type = typeof types[number];
 
 export const useNotifications = defineStore("notifications", () => {
   const notifications = ref([] as Notification[]);
@@ -60,7 +63,10 @@ export const useNotifications = defineStore("notifications", () => {
     (await unsubscribeFn)();
   };
 
-  const setAsRead = (id: string, optins?: { addToStorage: boolean }) => {
+  const setAsRead = (
+    id: string,
+    optins?: { addToStorage: boolean } = { addToStorage: true }
+  ) => {
     if (timeouts[id]) window.clearTimeout(timeouts[id]);
 
     if (optins?.addToStorage) {
@@ -89,7 +95,7 @@ export const useNotifications = defineStore("notifications", () => {
     timeouts[notification.id] = window.setTimeout(() => {
       console.info(`Notification ${notification.id} timed out`);
       setAsRead(notification.id);
-    }, notification.timeout || 5000);
+    }, notification.timeout || NOTIFICATION_TIMEOUT);
   };
 
   const add = (notification: Notification, options?: { replace: boolean }) => {
