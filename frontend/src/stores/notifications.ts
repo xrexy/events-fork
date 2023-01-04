@@ -1,14 +1,16 @@
-import type { BaseRecord } from "@/pocketbase";
+import { isTestEmail, type BaseRecord } from "@/pocketbase";
 import client from "@/pocketbase";
 import { defineStore } from "pinia";
 import type { RecordSubscription } from "pocketbase";
 import { ref } from "vue";
+import { useAuth } from "./auth";
 
 export interface Notification extends BaseRecord {
   title: string;
   body: string;
   type: Type;
   timeout?: number;
+  published: boolean;
 }
 
 const LOCAL_STORAGE_KEY = "notifications__read";
@@ -23,6 +25,7 @@ export type Type = typeof types[number];
 export const useNotifications = defineStore("notifications", () => {
   const notifications = ref([] as Notification[]);
   let readNotifications: string[] = [];
+  const { user } = useAuth();
   const timeouts: Record<string, number> = {};
 
   client
@@ -30,7 +33,11 @@ export const useNotifications = defineStore("notifications", () => {
     .getFullList<Notification>()
     .then((list) => {
       const local = fetchLocal();
-      list.filter((n) => !local.includes(n.id)).forEach(internalAdd);
+      console.log(local, list);
+      list
+        .filter((n) => !local.includes(n.id))
+        .filter((n) => (n.published ? true : user && isTestEmail(user.email)))
+        .forEach(internalAdd);
     });
 
   const handleUpdate: (data: RecordSubscription<Notification>) => void = ({
