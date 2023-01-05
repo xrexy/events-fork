@@ -81,7 +81,7 @@ const sections: {
 <template>
   <div
     @click="() => toggleActive()"
-    class="flex items-center rounded-full border border-white p-2 hover:cursor-pointer"
+    class="flex items-center rounded-full border border-gray-400 p-2 hover:cursor-pointer dark:border-white"
   >
     <UserIcon class="h-5 w-5" />
   </div>

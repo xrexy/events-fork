@@ -5,7 +5,7 @@ import NotificationsRoot from "./components/NotificationsRoot.vue";
 
 <template>
   <Header />
-  <main class="bg-gray-100 px-8 pt-[76px] dark:bg-gray-900">
+  <main class="bg-gray-100 px-24 pt-[76px] dark:bg-gray-900">
     <router-view />
   </main>
   <NotificationsRoot />
