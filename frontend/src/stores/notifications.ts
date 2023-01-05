@@ -15,7 +15,7 @@ export interface Notification extends BaseRecord {
 
 const LOCAL_STORAGE_KEY = "notifications__read";
 const MAXIMUM_NOTIFICATIONS = 2;
-const NOTIFICATION_TIMEOUT = 10 * 1000;
+const NOTIFICATION_TIMEOUT = 10 * 1000000;
 const actionsList = ["update", "create", "delete"] as const;
 const types = ["info", "success", "warning", "error"] as const;
 
