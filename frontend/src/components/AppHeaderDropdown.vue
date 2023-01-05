@@ -11,9 +11,17 @@ const { isAuthenticated, user, logout } = useAuth();
 const isDark = useDark();
 const toggleTheme = useToggle(isDark);
 
+const dropdown = ref<HTMLDivElement>();
 const root = ref<HTMLDivElement>();
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-onClickOutside(root, (_) => toggleActive(false));
+
+onClickOutside(
+  dropdown,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  (_) => {
+    toggleActive(false);
+  },
+  { ignore: [root] }
+);
 
 const sections: {
   label: string;
@@ -80,14 +88,15 @@ const sections: {
 
 <template>
   <div
+    ref="root"
     @click="() => toggleActive()"
     class="flex items-center rounded-full border border-gray-400 p-2 hover:cursor-pointer dark:border-white"
   >
-    <UserIcon class="h-5 w-5" />
+    <UserIcon ref="root__icon" class="h-5 w-5" />
   </div>
 
   <div
-    ref="root"
+    ref="dropdown"
     v-show="active"
     class="fixed right-0 top-[63px] flex h-[calc(100vh-63px)] w-screen flex-col justify-evenly border-t border-gray-300 bg-gray-200 px-32 pt-4 pb-32 text-center dark:border-slate-800 dark:bg-slate-900 sm:absolute sm:h-fit sm:w-fit sm:gap-4 sm:border sm:px-4 sm:py-4"
   >
