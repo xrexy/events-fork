@@ -14,12 +14,13 @@ const events = await fetchAll().then((records) =>
 </script>
 
 <template>
-  <div v-if="events.length > 0">
+  <!-- Will implement the actual design someday... -->
+  <div v-if="events.length > 0" class="pt-2">
     <div
       v-for="event in events"
       :key="event.title"
       @click="() => router.push(`/events/${event.id}`)"
-      class="w-fit border bg-slate-900 p-2 dark:border-slate-800"
+      class="w-fit border border-gray-400 bg-gray-200 p-4 dark:border-slate-800 dark:bg-slate-900"
     >
       <img
         :src="event.thumbnail"

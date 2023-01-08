@@ -56,7 +56,7 @@ const icons: { [key in Type]: Icon } = {
       @click="() => notiStore.setAsRead(notification.id)"
       v-for="notification in notiStore.notifications"
       :key="notification.id"
-      class="mb-4 flex h-16 w-full flex-row items-center justify-between rounded-lg border border-gray-300 bg-gray-100 py-12 px-4 shadow-lg hover:cursor-pointer sm:w-96"
+      class="mb-4 flex h-16 w-full flex-row items-center justify-between rounded-lg border border-gray-300 bg-gray-100 py-12 px-4 shadow-lg shadow-slate-300 hover:cursor-pointer dark:border-slate-800 dark:bg-slate-900 dark:shadow-none sm:w-96"
     >
       <div class="flex w-[85%] max-w-max flex-row items-center">
         <div class="flex w-full flex-col">

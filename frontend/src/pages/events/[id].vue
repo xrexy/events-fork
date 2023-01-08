@@ -21,7 +21,7 @@ const eventId = computed(() => {
 onBeforeMount(async () => {
   console.log("Mounting event view page");
 
-  if (!isAuthenticated) return fail("/login", "Not authenticated");
+  if (!isAuthenticated) return fail("/auth/login", "Not authenticated");
 
   if (!eventId.value) return fail("/", "No event id");
 

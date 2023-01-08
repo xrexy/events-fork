@@ -15,7 +15,7 @@ const navigationItems: NavigationItem[] = [
 
 <template>
   <nav
-    class="fixed z-10 flex h-16 w-full items-center justify-between border-b border-gray-300 bg-gray-200 px-32 dark:border-slate-800 dark:bg-slate-900"
+    class="fixed z-10 flex h-16 w-full items-center justify-between border-b border-gray-300 bg-gray-200 px-20 dark:border-slate-800 dark:bg-slate-900"
   >
     <router-link to="/">
       <img
