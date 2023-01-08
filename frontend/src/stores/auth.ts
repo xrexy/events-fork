@@ -1,8 +1,8 @@
 import type { BaseRecord } from "@/pocketbase";
 import client from "@/pocketbase";
+import type { LoginPayload } from "@/typings";
 import { defineStore } from "pinia";
 import { computed, ref } from "vue";
-
 export interface User extends BaseRecord, UserSettingsDto {
   email: string;
   username: string;
@@ -25,11 +25,6 @@ export interface UpdateUserDto {
   oldPassword?: string;
   /** Set to null to remove current avatar. */
   avatar?: File | null;
-}
-
-export interface LoginPayload {
-  identity: string;
-  password: string;
 }
 
 export interface UserSettingsDto {
@@ -116,5 +111,6 @@ export const useAuth = defineStore("auth", () => {
     updateUser,
     updateSettings,
     deleteUser,
+    client,
   };
 });

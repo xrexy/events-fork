@@ -40,7 +40,7 @@ const sections: {
           }
         : {
             label: "Sign in",
-            redirect: "/login",
+            redirect: "/auth/login",
           },
       {
         label: "Toggle Theme",
